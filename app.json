@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Word Twirl",
-    "slug": "Word_Twirl",
-    "version": "1.0.1",
+    "name": "Word Twirl Pro",
+    "slug": "Word_Twirl_Pro",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -17,27 +17,24 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.sathyav30.Word.Twirl",
-      "buildNumber":"2"
+      "buildNumber": "1"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.sathyav30.Word_Twirl",
-      "versionCode":5
+      "package": "com.sathyav30.Word_Twirl_Pro",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "owner": "sathyav30",
     "extra": {
       "eas": {
-        "projectId": "ab218430-7d28-46b3-8e4b-6a21a7b7d4cd"
+        "projectId": "1ffc82ed-8f37-421a-95e2-7436cc8a0a07"
       }
     }
-  },
-  "react-native-google-mobile-ads": {
-    "android_app_id": "ca-app-pub-3672586083934170~7640887183",
-    "ios_app_id": "ca-app-pub-3672586083934170~3231154299"
   }
 }

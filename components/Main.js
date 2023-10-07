@@ -5,9 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  Modal,
-  Animated,
-  SafeAreaView,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
@@ -17,9 +14,7 @@ import { playButtonSound } from '../AudioHelper';
 import { FontAwesome } from '@expo/vector-icons';
 import SoundContext from '../SoundContext';
 import GradientContext from "../GradientContext";
-import { BannerAd, BannerAdSize, TestIds, InterstitialAd, AdEventType, RewardedInterstitialAd, RewardedAdEventType } from 'react-native-google-mobile-ads';
 import { scaledSize } from "../ScalingUtility";
-import { adUnitIdBanner } from "../AdHelper";
 const { width, height } = Dimensions.get("window");
 
 //Main menu screen
@@ -27,45 +22,6 @@ export default function Main({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const { isSoundMuted, setIsSoundMuted, isMusicMuted, setIsMusicMuted } = useContext(SoundContext);
   const {gradientColors} = useContext(GradientContext)
-  
-
-
-  const numberOfRows = 12;
-  const text = "Word Twirl";
-  const lettersPerRow = text.length;
-  const rows = new Array(numberOfRows).fill(text.split(''));
-
-  const animationRefs = useRef(
-    new Array(numberOfRows)
-      .fill()
-      .map((_, idx) => ({
-        animValue: new Animated.Value(idx % 2 === 0 ? width : -width), // Odd rows start on the right, even rows on the left
-        offset: idx % lettersPerRow,
-      })),
-  ).current;
-  
-  useEffect(() => {
-    animationRefs.forEach((ref, index) => {
-      const speed = 10000;
-      const isEvenRow = index % 2 === 0;
-  
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(ref.animValue, {
-            toValue: isEvenRow ? -width : width,  
-            duration: speed,
-            useNativeDriver: true,
-          }),
-          Animated.timing(ref.animValue, { 
-            toValue: isEvenRow ? width : -width, 
-            duration: 0,
-            useNativeDriver: true,
-          }),
-        ]),
-      ).start();
-    });
-  }, []);
-
 
   
   return (
@@ -132,15 +88,6 @@ export default function Main({ navigation }) {
     </View>
 
         </View>
-        <View style ={{marginBottom:scaledSize(30)}}>
-        <BannerAd 
-        unitId={adUnitIdBanner}
-        size={BannerAdSize.LARGE_BANNER}
-        requestOptions={{
-          requestNonPersonalizedAdsOnly: true
-        }}
-      />
-      </View>
       </View>
 
 

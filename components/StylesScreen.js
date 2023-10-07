@@ -10,50 +10,29 @@ import { scaledSize } from '../ScalingUtility';
 
 // test options
 
-// const GRADIENT_OPTIONS = [
-  //   { colors: ['#000000', '#000000'] },
-  //   { colors: ['#E3242B', '#E3242B'], requiredScore: 0 },
-  //   { colors: ['#2832c2', '#2832c2'], requiredScore: 0 },
-  //   { colors: ['#276221', '#276221'], requiredScore: 0 },
-  //   { colors: ['#33FF57', '#FF33D1'], requiredGamesPlayed: 0 },
-  //   { colors: ["#8B4513", "#2F4F4F"], requiredGamesPlayed: 0 },
-  //   { colors: ["#E55D87", "#5FC3E4"], requiredGamesPlayed : 0 },
-  //   { colors: ['#2E3192', '#1BFFFF'], requiredWordLength : 0 },   
-  //   { colors: ["#003973", "#E5E5BE"], requiredWordLength : 0 },
-  //   { colors: ["#FFD700", "#4B0082"], requiredWordLength : 0 },   
-  // ];
-  
-  // export const MAP_OPTIONS = [
-    //   { idx: 0 },
-    //   { idx: 1, requiredScore: 0 },
-    //   { idx: 2, requiredScore: 0 },
-    //   { idx: 3, requiredGamesPlayed: 0 },
-    //   { idx: 5, requiredGamesPlayed: 0 },
-    //   { idx: 4, requiredWordLength: 0 },
-    //   { idx: 6, requiredWordLength: 0 },
-    // ];
 const GRADIENT_OPTIONS = [
-  { colors: ['#000000', '#000000'] },
-  { colors: ['#E3242B', '#E3242B'], requiredScore: 1000 },
-  { colors: ['#2832c2', '#2832c2'], requiredScore: 5000 },
-  { colors: ['#276221', '#276221'], requiredScore: 10000 },
-  { colors: ['#33FF57', '#FF33D1'], requiredGamesPlayed: 25 },
-  { colors: ["#8B4513", "#2F4F4F"], requiredGamesPlayed: 100 },
-  { colors: ["#E55D87", "#5FC3E4"], requiredGamesPlayed : 500 },
-  { colors: ['#2E3192', '#1BFFFF'], requiredWordLength : 6 },   
-  { colors: ["#003973", "#E5E5BE"], requiredWordLength : 8 },
-  { colors: ["#FFD700", "#4B0082"], requiredWordLength : 10 },   
-];
-    
-export const MAP_OPTIONS = [
-  { idx: 0 },
-  { idx: 1, requiredScore: 3000 },
-  { idx: 2, requiredScore: 8000 },
-  { idx: 3, requiredGamesPlayed: 65 },
-  { idx: 5, requiredGamesPlayed: 300 },
-  { idx: 4, requiredWordLength: 7 },
-  { idx: 6, requiredWordLength: 9 },
-];
+    { colors: ['#000000', '#000000'] },
+    { colors: ['#E3242B', '#E3242B'], requiredScore: -1 },
+    { colors: ['#2832c2', '#2832c2'], requiredScore: -1 },
+    { colors: ['#276221', '#276221'], requiredScore: -1 },
+    { colors: ['#33FF57', '#FF33D1'], requiredGamesPlayed: -1 },
+    { colors: ["#8B4513", "#2F4F4F"], requiredGamesPlayed: -1 },
+    { colors: ["#E55D87", "#5FC3E4"], requiredGamesPlayed : -1 },
+    { colors: ['#2E3192', '#1BFFFF'], requiredWordLength : -1 },   
+    { colors: ["#003973", "#E5E5BE"], requiredWordLength : -1},
+    { colors: ["#FFD700", "#4B0082"], requiredWordLength : -1 },   
+  ];
+  
+  export const MAP_OPTIONS = [
+      { idx: 0 },
+      { idx: 1, requiredScore: -1 },
+      { idx: 2, requiredScore: -1 },
+      { idx: 3, requiredGamesPlayed: -1 },
+      { idx: 5, requiredGamesPlayed: -1 },
+      { idx: 4, requiredWordLength: -1 },
+      { idx: 6, requiredWordLength: -1 },
+    ];
+
 
 
 
@@ -152,22 +131,16 @@ export default function StylesScreen() {
     let progressDetail = index === 0 ? 'Unlocked!' : "";
   
 
-    if (gradient.requiredScore && index !== 0) {
-      isDisabled = totalScore < gradient.requiredScore;
-      progress = Math.min(totalScore / gradient.requiredScore, 1);
-      milestoneText = `Score ${gradient.requiredScore} points`;
-      progressDetail = (gradient.requiredScore - totalScore) > 0 
+    if (gradient.requiredScore == -1 && index !== 0) {
+      progress = 1;
+      progressDetail = (gradient.requiredScore - totalScore) >= 0 
              ? `${gradient.requiredScore - totalScore} points left` 
              : 'Unlocked!';
-    } else if (gradient.requiredWordLength && index !== 0) {
-      isDisabled = longestWordLength < gradient.requiredWordLength;
-      progress = isDisabled ? 0 : 1;
-      milestoneText = `Find a ${gradient.requiredWordLength}-letter word`;
+    } else if (gradient.requiredWordLength == -1 && index !== 0) {
+      progress = 1;
       progressDetail = !isDisabled ? 'Unlocked!' : '';
-    } else if (gradient.requiredGamesPlayed && index !== 0) {
-      isDisabled = gamesPlayed < gradient.requiredGamesPlayed;
-      progress = Math.min(gamesPlayed / gradient.requiredGamesPlayed, 1);
-      milestoneText = `Play ${gradient.requiredGamesPlayed} games`;
+    } else if (gradient.requiredGamesPlayed == -1 && index !== 0) {
+      progress = 1;
       progressDetail = (gradient.requiredGamesPlayed - gamesPlayed) > 0 
              ? `${gradient.requiredGamesPlayed - gamesPlayed} games left` 
              : 'Unlocked!';
@@ -202,22 +175,14 @@ export default function StylesScreen() {
     let progressDetail = "";
   
     // Same logic to determine if the map is unlocked or not based on the required criteria
-    if (mapOption.requiredScore) {
-      isDisabled = totalScore < mapOption.requiredScore;
-      progress = Math.min(totalScore / mapOption.requiredScore, 1);
-      milestoneText = `Score ${mapOption.requiredScore} points`;
-      progressDetail = (mapOption.requiredScore - totalScore) > 0 
-             ? `${mapOption.requiredScore - totalScore} points left` 
-             : 'Unlocked!';
-    } else if (mapOption.requiredWordLength) {
-      isDisabled = longestWordLength < mapOption.requiredWordLength;
-      progress = isDisabled ? 0 : 1;
-      milestoneText = `Find a ${mapOption.requiredWordLength}-letter word`;
+    if (mapOption.requiredScore == -1) {
+      progress =1;
       progressDetail = !isDisabled ? 'Unlocked!' : '';
-    } else if (mapOption.requiredGamesPlayed) {
-      isDisabled = gamesPlayed < mapOption.requiredGamesPlayed;
-      progress = Math.min(gamesPlayed / mapOption.requiredGamesPlayed, 1);
-      milestoneText = `Play ${mapOption.requiredGamesPlayed} games`;
+    } else if (mapOption.requiredWordLength == -1) {
+      progress = isDisabled ? 0 : 1;
+      progressDetail = !isDisabled ? 'Unlocked!' : '';
+    } else if (mapOption.requiredGamesPlayed == -1) {
+      progress = 1;
       progressDetail = (mapOption.requiredGamesPlayed - gamesPlayed) > 0 
              ? `${mapOption.requiredGamesPlayed - gamesPlayed} games left` 
              : 'Unlocked!';

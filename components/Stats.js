@@ -5,9 +5,7 @@ import { getStatForKey, getAllWordsUserFound, GAMES_PLAYED_KEY_PREFIX, HIGH_SCOR
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FontAwesome } from '@expo/vector-icons';
 import GradientContext from '../GradientContext';
-import { BannerAd, BannerAdSize, TestIds, InterstitialAd, AdEventType, RewardedInterstitialAd, RewardedAdEventType } from 'react-native-google-mobile-ads';
 import { scaledSize } from '../ScalingUtility';
-import { adUnitIdBanner } from '../AdHelper';
 
 //Stats screen
 const Stats = ({ navigation }) => {
@@ -106,15 +104,6 @@ const Stats = ({ navigation }) => {
                 )}
             
             </SafeAreaView>
-            <View style ={{marginBottom:scaledSize(35), alignSelf:'center'}}>
-        <BannerAd 
-        unitId={adUnitIdBanner}
-        size={BannerAdSize.LARGE_BANNER}
-        requestOptions={{
-          requestNonPersonalizedAdsOnly: true
-        }}
-      />
-      </View>
         </LinearGradient>
     );
 };

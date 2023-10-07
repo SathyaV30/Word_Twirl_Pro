@@ -5,81 +5,18 @@ import { BlurView } from 'expo-blur';
 import { playButtonSound } from '../AudioHelper';
 import SoundContext from '../SoundContext';
 import GradientContext from '../GradientContext';
-import { BannerAd, BannerAdSize, TestIds, InterstitialAd, AdEventType, RewardedInterstitialAd, RewardedAdEventType, RewardedAd } from 'react-native-google-mobile-ads';
 import { updateHighScoreIfNeeded, updateTotalScoreForTime } from '../StorageHelper';
 import { scaledSize } from '../ScalingUtility';
-import { adUnitIdRewarded } from '../AdHelper';
 
 
-const rewardedAdv = RewardedAd.createForAdRequest(adUnitIdRewarded, {
-    requestNonPersonalizedAdsOnly: true
-});
 
 //Postgame screen
 export default function PostGame({ route, navigation }) {
     const { isSoundMuted } = useContext(SoundContext);
     const { allWords, foundWords, userScore, selectedTime, letters, wordsToPath } = route.params;
     const { gradientColors } = useContext(GradientContext);
-    const [isAdLoaded, setIsAdLoaded] = useState(false);
-    const [score, setScore] = useState(userScore);
-    const [rewarded, setRewared] = useState(false);
-    const [adLoadingText, setAdLoadingText] = useState('Watch a short video for double score?');
-
-
-    //Handle rewarded ad functions
-    useEffect(() => {
-        const unsubscribeLoaded = rewardedAdv.addAdEventListener(RewardedAdEventType.LOADED, () => {
-          setIsAdLoaded(true);
-     
-        });
-        const unsubscribeEarned = rewardedAdv.addAdEventListener(
-          RewardedAdEventType.EARNED_REWARD,
-          reward => {
-            setRewared(true);
-          },
-        );
-
-        rewardedAdv.load();
-    
-
-        return () => {
-          unsubscribeLoaded();
-          unsubscribeEarned();
-        };
-      }, []);
-
-
-    const playAdForReward = () => {
-      if (isAdLoaded) {
-        rewardedAdv.show();
-      } else {
-        setAdLoadingText('Loading...')
-      }
-    }
-
-    useEffect(() => {
-      if (adLoadingText == 'Loading...' && isAdLoaded) {
-        rewardedAdv.show();
-      }
-      
-    }, [isAdLoaded, adLoadingText])
-    const rewardUser = async () => {
-        await updateTotalScoreForTime(selectedTime, score);
-        await updateHighScoreIfNeeded(selectedTime, score * 2);
-    }
-
-
-
-
-    useEffect(() => {
-        if (rewarded) {
-            rewardUser();
-            setScore(score * 2);
-        }
-    }, [rewarded]);
-
  
-    const getPointValue = (word) => rewarded ? (word.length ** 2) * 2 : word.length ** 2;
+    const getPointValue = (word) => (word.length ** 2) * 2;
 
     const sortedWords = Array.from(allWords).sort((a, b) => {
         const difference = b.length - a.length;
@@ -97,7 +34,7 @@ export default function PostGame({ route, navigation }) {
             <SafeAreaView>
                 <View style={styles.mainContainer}>
                     <Text style={styles.score}>
-                        Score: {rewarded ? `${userScore} x 2 = ${userScore * 2}` : userScore}
+                        Score: {userScore}
                     </Text>
                     <View style={styles.scrollViewsContainer}>
                         <ScrollView style={[styles.halfWidthScrollView, styles.fixedHeightScrollView]}>
@@ -120,15 +57,6 @@ export default function PostGame({ route, navigation }) {
                         </ScrollView>
                     </View>
                     <View style={styles.buttonContainer}>
-                        {!rewarded &&
-                            <TouchableOpacity style={styles.button} onPress={playAdForReward}>
-                                <BlurView intensity={50} tint="light" style={styles.glassButton}>
-                                    <Text style={styles.buttonTextSmall}>
-                                        {adLoadingText}
-                                    </Text>
-                                </BlurView>
-                            </TouchableOpacity>
-                        }
                             <TouchableOpacity style={styles.button} onPress={() => { navigation.navigate('Start Screen'); playButtonSound(isSoundMuted) }}>
                         <BlurView intensity={50} tint="light" style={styles.glassButton}>
                                 <Text style={styles.buttonText}>New Game</Text>

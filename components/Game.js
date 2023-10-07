@@ -35,8 +35,6 @@ import { playButtonSound, playCellSound,playBGM,stopBGM,pauseBgm,playCorrectSoun
 import SoundContext from '../SoundContext';
 import { FontAwesome } from '@expo/vector-icons';
 import { BlurView } from "expo-blur";
-import { BannerAd, BannerAdSize, TestIds, InterstitialAd, AdEventType, RewardedInterstitialAd, RewardedAdEventType } from 'react-native-google-mobile-ads';
-
 import {
   updateTotalScoreForTime, 
   updateAllWordsUserFound,
@@ -53,12 +51,8 @@ import { Axios } from 'axios';
 import GradientContext from '../GradientContext';
 import { MAP_OPTIONS } from './StylesScreen';
 import { scaledSize } from '../ScalingUtility';
-import { adUnitIdBanner, adUnitIdInterstitial } from '../AdHelper';
 const windowHeight = Dimensions.get('window').height;
 
-const interstitial = InterstitialAd.createForAdRequest(adUnitIdInterstitial, {
-  requestNonPersonalizedAdsOnly: true
-});
 //Handle game functionality
 export default function Game({ route, navigation}) {
   
@@ -78,8 +72,6 @@ export default function Game({ route, navigation}) {
   const { isSoundMuted, isMusicMuted, setIsSoundMuted, setIsMusicMuted } = useContext(SoundContext);
   const wordsUserFound = useRef(new Set());
   const hasRun = useRef(false);
-  const [interstitialLoaded, setInterstitialLoaded] = useState(false);
-
   const {gradientColors} = useContext(GradientContext)
   const [wordsToPath, setWordsToPath] = useState({});
 
@@ -93,43 +85,6 @@ if (scaledSize(cellSizeTemp) >= 50) {
  cellSize = 50;
 }
 
-const loadInterstitial = () => {
-    const unsubscribeLoaded = interstitial.addAdEventListener(
-      AdEventType.LOADED,
-      () => {
-        setInterstitialLoaded(true);
-      }
-    );
-
-    const unsubscribeClosed = interstitial.addAdEventListener(
-      AdEventType.CLOSED,
-      () => {
-        
-        setInterstitialLoaded(false);
-        interstitial.load();
-    
-
-      }
-    );
-
-    interstitial.load();
-
-    return () => {
-      unsubscribeClosed();
-      unsubscribeLoaded();
-    }
-}
-
-  
-  useEffect(() => {
-    const unsubscribeInterstitialEvents = loadInterstitial();
- 
-    
-    return () => {
-      unsubscribeInterstitialEvents();
-
-    };
-  }, [])
   
     useEffect(() => {
       playBGM(isMusicMuted);
@@ -154,7 +109,7 @@ const loadInterstitial = () => {
     if  (!word || word.length == 0) {
       return 0;
     }
-    return word.length ** 2;
+    return word.length ** 2 * 2;
   }
 
 
@@ -456,11 +411,7 @@ useEffect(()=> {
             setTime(time-1);
         } else {
            
-              if (interstitialLoaded) {
-                  stopBGM();
-                  interstitial.show();
-              } 
-            
+            stopBGM();
             navigateToPostGame();
                
         }
@@ -470,20 +421,7 @@ useEffect(()=> {
 }, [time, isPaused, navigation, allWords, wordsUserFound, score, selectedTime]);
 
 
-//TBD if to use
-const shouldShowInterstitial = (selectedTime) => {
-  const random = Math.random();
-  switch (selectedTime) {
-    case '1 min':
-      return random <= 0.33;
-    case '3 min':
-      return random <= 0.50;
-    case '5 min':
-      return random <= 0.75;
-    default:
-      return false;
-  }
-}
+
 
 const navigateToPostGame = async () => {
   // Update AsyncStorage
@@ -807,16 +745,6 @@ return (
       <TouchableOpacity style={[styles.closeButton, styles.pauseButton]} onPress={() => {setIsPaused(true); playButtonSound(isSoundMuted); pauseBGM(isMusicMuted)}}>
           <Text style={styles.closeButtonText}>Pause</Text>
       </TouchableOpacity>
-
-      <View style ={{height:50, marginTop:scaledSize(90)}}>
-      <BannerAd
-        unitId={adUnitIdBanner}
-        size={BannerAdSize.LARGE_BANNER}
-        requestOptions={{
-          requestNonPersonalizedAdsOnly: true
-        }}
-    />
-    </View>
     
     </SafeAreaView>
 

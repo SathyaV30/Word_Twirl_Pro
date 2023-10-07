@@ -5,12 +5,10 @@ import { BlurView } from 'expo-blur';
 import { playButtonSound } from '../AudioHelper';
 import SoundContext from '../SoundContext';
 const { width, height } = Dimensions.get('window');
-import { BannerAd, BannerAdSize, TestIds, InterstitialAd, AdEventType, RewardedInterstitialAd, RewardedAdEventType } from 'react-native-google-mobile-ads';
 import GradientContext from '../GradientContext';
 import { MAP_OPTIONS } from './StylesScreen';
 import {  getUnlockedMaps, getTotalScoreForTime, getGamesPlayed, getAllWordsUserFound } from '../StorageHelper';
 import { scaledSize } from '../ScalingUtility';
-import { adUnitIdBanner } from '../AdHelper';
 //Starting screen before game screen
 export default function StartScreen({navigation}) {
     const [selectedMap, setSelectedMap] = useState(null);
@@ -185,15 +183,7 @@ export default function StartScreen({navigation}) {
                         <Text style={styles.buttonText}>Start Game</Text>
                     </BlurView>
                 </TouchableOpacity>
-                <View style={styles.adBanner}>
-    <BannerAd 
-        unitId={adUnitIdBanner}
-        size={BannerAdSize.LARGE_BANNER}
-        requestOptions={{
-          requestNonPersonalizedAdsOnly: true
-        }}
-    />
-</View>
+
 
             </SafeAreaView>
         </LinearGradient>
