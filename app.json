@@ -16,7 +16,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.sathyav30.Word.Twirl",
+      "bundleIdentifier": "com.sathyav30.Word.Twirl.Pro",
       "buildNumber": "1"
     },
     "android": {
